@@ -1,0 +1,33 @@
+name: inventory_app
+description: Controle de Estoque App
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  sqflite: ^2.3.0
+  intl: ^0.20.2
+  provider: ^6.0.0
+  path: ^1.8.3
+  image_picker: ^1.1.2
+  sqflite_common_ffi: ^2.3.5
+  pdf: ^3.11.3
+  path_provider: ^2.1.5
+  open_file: ^3.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/senac.png
+    - assets/fonts/Roboto-Regular.ttf
