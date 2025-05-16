@@ -55,6 +55,19 @@ class _ProdutoPageState extends State<ProdutoPage> {
     });
   }
 
+  String _medidaToTexto(dynamic medida) {
+    switch (medida.toString()) {
+      case '1':
+        return 'Unidade';
+      case '2':
+        return 'Caixa';
+      case '3':
+        return 'Litro';
+      default:
+        return 'Desconhecido';
+    }
+  }
+
   Future<void> generatePDF(List<Produto> produtos) async {
     final pdf = pw.Document();
     final now = DateTime.now();
@@ -84,7 +97,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
             pw.Table(
               border: pw.TableBorder.all(width: 0.5),
               columnWidths: {
-                0: const pw.FixedColumnWidth(50), // Código
+                0: const pw.FixedColumnWidth(70), // Código
                 1: const pw.FlexColumnWidth(3), // Produto
                 2: const pw.FixedColumnWidth(50), // Medida
                 3: const pw.FlexColumnWidth(2), // Local
@@ -134,7 +147,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(4),
-                        child: pw.Text(p.medida.toString(),
+                        child: pw.Text(_medidaToTexto(p.medida),
                             style: const pw.TextStyle(fontSize: 10)),
                       ),
                       pw.Padding(
