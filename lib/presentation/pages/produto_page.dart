@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -61,42 +63,104 @@ class _ProdutoPageState extends State<ProdutoPage> {
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
           return [
             pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
-                pw.Text("Relatório de Produtos",
-                    style: pw.TextStyle(
-                        fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                pw.Text(formatter.format(now)),
+                pw.Text(
+                  "Relatório de Produtos",
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.Text(formatter.format(now),
+                    style: const pw.TextStyle(fontSize: 10)),
               ],
             ),
             pw.SizedBox(height: 20),
-            pw.TableHelper.fromTextArray(
-              headers: [
-                'Código',
-                'Produto',
-                'Medida',
-                'Local',
-                'Entrada',
-                'Saída',
-                'Saldo',
+            pw.Table(
+              border: pw.TableBorder.all(width: 0.5),
+              columnWidths: {
+                0: const pw.FixedColumnWidth(50), // Código
+                1: const pw.FlexColumnWidth(3), // Produto
+                2: const pw.FixedColumnWidth(50), // Medida
+                3: const pw.FlexColumnWidth(2), // Local
+                4: const pw.FixedColumnWidth(50), // Entrada
+                5: const pw.FixedColumnWidth(50), // Saída
+                6: const pw.FixedColumnWidth(50), // Saldo
+              },
+              children: [
+                // Cabeçalho
+                pw.TableRow(
+                  decoration: const pw.BoxDecoration(color: PdfColors.grey300),
+                  children: [
+                    for (var header in [
+                      'Código',
+                      'Produto',
+                      'Medida',
+                      'Local',
+                      'Entrada',
+                      'Saída',
+                      'Saldo'
+                    ])
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(
+                          header,
+                          style: pw.TextStyle(
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+                // Dados
+                ...produtos.map(
+                  (p) => pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(p.codigo ?? '-',
+                            style: const pw.TextStyle(fontSize: 10)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(p.nome,
+                            style: const pw.TextStyle(fontSize: 10)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(p.medida.toString(),
+                            style: const pw.TextStyle(fontSize: 10)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(p.local ?? '-',
+                            style: const pw.TextStyle(fontSize: 10)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(p.entrada.toString(),
+                            style: const pw.TextStyle(fontSize: 10)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(p.saida.toString(),
+                            style: const pw.TextStyle(fontSize: 10)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(p.saldo.toString(),
+                            style: const pw.TextStyle(fontSize: 10)),
+                      ),
+                    ],
+                  ),
+                ),
               ],
-              data: produtos
-                  .map((p) => [
-                        p.codigo ?? '-',
-                        p.nome,
-                        p.medida,
-                        p.local ?? '-',
-                        p.entrada.toString(),
-                        p.saida.toString(),
-                        p.saldo.toString(),
-                      ])
-                  .toList(),
-              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-              cellAlignment: pw.Alignment.centerLeft,
-              cellStyle: pw.TextStyle(fontSize: 10),
             ),
           ];
         },
@@ -106,7 +170,6 @@ class _ProdutoPageState extends State<ProdutoPage> {
     final output = await getApplicationDocumentsDirectory();
     final file = File('${output.path}/relatorio_produtos.pdf');
     await file.writeAsBytes(await pdf.save());
-    print('PDF salvo em: ${file.path}');
     await OpenFile.open(file.path);
   }
 

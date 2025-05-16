@@ -43,7 +43,6 @@ class Produto {
         parsedDate = DateTime.parse(map['dataEntrada']);
       }
     } catch (e) {
-      print("Erro ao converter dataEntrada: ${map['dataEntrada']}");
       parsedDate = null;
     }
 
